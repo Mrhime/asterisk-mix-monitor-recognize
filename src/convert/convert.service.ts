@@ -10,10 +10,10 @@ import { getDatePath } from '../asterisk/asterisk.utils';
 export class ConvertService {
   constructor(private readonly logger: Logger) {}
   private sox = new SoxAsync();
-
+  private delayCronDaysConvert = 1;
   @Cron('00 02 * * *')
   async handleCron() {
-    const path = getDatePath(1);
+    const path = getDatePath(this.delayCronDaysConvert);
     await this.convertPath(new DatePathDto(path));
   }
   async convertPath(datePathDto: DatePathDto) {

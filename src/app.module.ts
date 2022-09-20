@@ -10,6 +10,7 @@ import {
   WinstonModule,
 } from 'nest-winston';
 import { ConvertModule } from './convert/convert.module';
+import { RecognizeModule } from './recognize/recognizeModule';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ConvertModule } from './convert/convert.module';
     }),
     AsteriskModule,
     ConvertModule,
+    RecognizeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

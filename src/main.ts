@@ -15,6 +15,7 @@ async function bootstrap() {
     .setDescription('API')
     .setVersion('v1')
     .addTag('Convert')
+    .addTag('Recognize')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
