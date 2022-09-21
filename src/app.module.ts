@@ -31,7 +31,7 @@ import { RecognizeModule } from './recognize/recognizeModule';
 
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
-      envFilePath: ['.dev.env', '.env'],
+      envFilePath: ['.env', '.dev.env'],
       expandVariables: true,
       isGlobal: true,
       cache: false,

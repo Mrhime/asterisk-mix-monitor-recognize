@@ -1,4 +1,8 @@
+
 # compiled output
+.env
+IAM_TOKEN
+YANDEX
 /dist
 /node_modules
 

@@ -6,7 +6,7 @@ import { DatePathDto } from './dto/date-path.dto';
 @Controller('Convert')
 export class ConvertController {
   constructor(private readonly convertService: ConvertService) {}
-  @Post('convert_at/')
+  @Post('convert/')
   async convertAt(@Body() datePathDto: DatePathDto) {
     console.log(datePathDto);
     return await this.convertService.convertPath(datePathDto);

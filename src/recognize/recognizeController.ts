@@ -45,4 +45,21 @@ export class RecognizeController {
     });
     return res;
   }
+
+  @Post('recognizeByPath')
+  async recognizeByPath(@Body() dto: RecognizeDto): Promise<any> {
+    const res = [];
+    const recognize = await this.recognizeService.recognizeByPath(dto);
+    console.log(recognize);
+    if (recognize.items) {
+      recognize.items.forEach((item) => {
+        res.push({
+          channelNumber: item.channelTag,
+          text: item.alternatives.map((alt) => alt.text),
+        });
+      });
+    }
+
+    return res;
+  }
 }

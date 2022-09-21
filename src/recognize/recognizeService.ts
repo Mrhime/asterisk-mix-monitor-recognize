@@ -47,7 +47,6 @@ export class RecognizeService {
 
     //'<идентификатор_открытого_ключа>';
     const keyId = this.configService.get('YA_PRIVATE_KEY_ID');
-
     const now = Math.floor(new Date().getTime() / 1000);
 
     const payload = {
@@ -87,9 +86,30 @@ export class RecognizeService {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  async recognizeByPath(dto: RecognizeDto): Promise<any> {
+    if (fs.existsSync(dto.file)) {
+      const file = {
+        buffer: {},
+      };
+      file.buffer = fs.readFileSync(dto.file);
+      return this.recognizeLong(file, dto);
+      // fs.readFile(dto.file, (err, data) => {
+      //   file = data;
+      //   console.log(data);
+      //   console.log(dto.file);
+      //   return this.recognizeLong(data, dto);
+      // });
+    } else {
+      this.logger.error('Not upload, please check path file!');
+      throw new BadRequestException('Not upload, please check path file!');
+    }
+  }
+
   /**** Recognize long **/
 
   async recognizeLong(file, dto: RecognizeDto): Promise<any> {
+    console.log(dto);
+    console.log(file.buffer);
     const fileName = `${dto.id}-${Date.now()}.wav`;
     const { Location } = await this.s3.Upload(
       {
@@ -98,7 +118,7 @@ export class RecognizeService {
       },
       '/',
     );
-
+    console.log(Location);
     if (!Location) {
       this.logger.error('Not upload, please check cloud settings!');
       throw new BadRequestException('Not upload, please check cloud settings!');
@@ -125,7 +145,6 @@ export class RecognizeService {
           },
         },
         audio: {
-          // uri: 'https://storage.yandexcloud.net/nest/3.wav',
           uri: Location,
         },
       },
@@ -144,25 +163,13 @@ export class RecognizeService {
     }
 
     const { id } = data;
-    return await this.runLongRunningRecognizeGetResult(
-      id,
-      dto.webhookUrl,
-      fileName,
-    );
+    return await this.runLongRunningRecognizeGetResult(id, fileName);
   }
 
-  async runLongRunningRecognizeGetResult(
-    id: string,
-    webhookUrl: string,
-    fileName: string,
-  ) {
+  async runLongRunningRecognizeGetResult(id: string, fileName: string) {
     while (true) {
       await this.timeout(5000);
-      const res = await this.longRunningRecognizeGetResult(
-        id,
-        fileName,
-        webhookUrl,
-      );
+      const res = await this.longRunningRecognizeGetResult(id, fileName);
       if (res.done === true) {
         return res;
       }
@@ -172,11 +179,9 @@ export class RecognizeService {
   private async longRunningRecognizeGetResult(
     id: string,
     fileName: string,
-    webhookUrl: string,
   ): Promise<any> {
     const { data, status } = await this.httpService.axiosRef.get(
       `https://operation.api.cloud.yandex.net/operations/${id}`,
-      // {},
       {
         headers: {
           Authorization: `Bearer ${this.IAMToken}`,
@@ -205,7 +210,6 @@ export class RecognizeService {
               };
             });
           }
-
           return item;
         });
       }
@@ -214,16 +218,6 @@ export class RecognizeService {
       if (remove === false) {
         this.logger.error('Not removed, please check cloud settings!');
       }
-
-      // if (webhookUrl) {
-      //   const response = await this.httpService.axiosRef.post(webhookUrl, res);
-      //   if (response.status !== 200) {
-      //     this.logger.error(
-      //       `post request error, webhookUrl: ${webhookUrl}, status: ${response.status}`,
-      //     );
-      //   }
-      // }
-
       return res;
     }
 

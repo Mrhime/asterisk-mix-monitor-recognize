@@ -6,9 +6,14 @@ import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.dev.env'],
+      expandVariables: true,
+      isGlobal: true,
+      cache: false,
+    }),
     HttpModule.register({
-      timeout: 1000,
+      timeout: 3000,
       maxRedirects: 1,
     }),
   ],
