@@ -31,6 +31,7 @@
     "asterisk-ami-client": "^1.1.5",
     "class-validator": "^0.13.2",
     "easy-yandex-s3": "^1.1.8",
+    "express": "^4.18.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
     "nest-winston": "^1.7.0",

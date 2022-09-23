@@ -10,7 +10,7 @@ import {
   WinstonModule,
 } from 'nest-winston';
 import { ConvertModule } from './convert/convert.module';
-import { RecognizeModule } from './recognize/recognizeModule';
+import { RecognizeModule } from './recognize/recognize.module';
 
 @Module({
   imports: [

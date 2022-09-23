@@ -1,6 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
-import { RecognizeController } from './recognizeController';
-import { RecognizeService } from './recognizeService';
+import { RecognizeController } from './recognize.controller';
+import { RecognizeService } from './recognize.service';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 

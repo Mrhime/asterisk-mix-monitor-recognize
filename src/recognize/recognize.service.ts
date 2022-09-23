@@ -6,6 +6,7 @@ import { join, resolve } from 'path';
 import * as jose from 'node-jose';
 
 import { ConfigService } from '@nestjs/config';
+import { response } from 'express';
 const EasyYandexS3 = require('easy-yandex-s3');
 
 @Injectable()
@@ -91,14 +92,9 @@ export class RecognizeService {
       const file = {
         buffer: {},
       };
-      file.buffer = fs.readFileSync(dto.file);
+
+      file.buffer = await fs.readFileSync(dto.file);
       return this.recognizeLong(file, dto);
-      // fs.readFile(dto.file, (err, data) => {
-      //   file = data;
-      //   console.log(data);
-      //   console.log(dto.file);
-      //   return this.recognizeLong(data, dto);
-      // });
     } else {
       this.logger.error('Not upload, please check path file!');
       throw new BadRequestException('Not upload, please check path file!');
@@ -108,17 +104,14 @@ export class RecognizeService {
   /**** Recognize long **/
 
   async recognizeLong(file, dto: RecognizeDto): Promise<any> {
-    console.log(dto);
-    console.log(file.buffer);
     const fileName = `${dto.id}-${Date.now()}.wav`;
     const { Location } = await this.s3.Upload(
       {
         buffer: file.buffer,
-        name: fileName,
+        body: fileName,
       },
       '/',
     );
-    console.log(Location);
     if (!Location) {
       this.logger.error('Not upload, please check cloud settings!');
       throw new BadRequestException('Not upload, please check cloud settings!');

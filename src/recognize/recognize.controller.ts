@@ -13,7 +13,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RecognizeDto } from './dto/recognize.dto';
-import { RecognizeService } from './recognizeService';
+import { RecognizeService } from './recognize.service';
 
 @ApiTags('Recognize')
 @Controller('Recognize')
@@ -46,20 +46,22 @@ export class RecognizeController {
     return res;
   }
 
-  @Post('recognizeByPath')
-  async recognizeByPath(@Body() dto: RecognizeDto): Promise<any> {
-    const res = [];
-    const recognize = await this.recognizeService.recognizeByPath(dto);
-    console.log(recognize);
-    if (recognize.items) {
-      recognize.items.forEach((item) => {
-        res.push({
-          channelNumber: item.channelTag,
-          text: item.alternatives.map((alt) => alt.text),
-        });
-      });
-    }
-
-    return res;
-  }
+  // @Post('recognizeByPath')
+  // async recognizeByPath(@Body() dto: RecognizeDto): Promise<any> {
+  //   const res = [];
+  //   const recognize = await this.recognizeService.recognizeByPath(dto);
+  //   console.log(recognize);
+  //   if (recognize) {
+  //     if (recognize.items) {
+  //       recognize.items.forEach((item) => {
+  //         res.push({
+  //           channelNumber: item.channelTag,
+  //           text: item.alternatives.map((alt) => alt.text),
+  //         });
+  //       });
+  //     }
+  //   }
+  //
+  //   return res;
+  // }
 }
